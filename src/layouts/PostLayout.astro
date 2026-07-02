@@ -1,0 +1,70 @@
+---
+import Base from './Base.astro';
+import { SOFTWARE, CATEGORIES, formatDate } from '../consts';
+import type { Software, Category } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  software: Software[];
+  category: Category;
+  sources: { title: string; url: string }[];
+}
+
+const { title, description, pubDate, updatedDate, software, category, sources } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <article>
+    <div class="meta">
+      <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+      {updatedDate && <span>（更新: {formatDate(updatedDate)}）</span>}
+      <span class="badge">{CATEGORIES[category]}</span>
+      {software.map((s) => <span class={`chip ${s}`}>{SOFTWARE[s]}</span>)}
+    </div>
+    <h1>{title}</h1>
+    <p class="lead">{description}</p>
+    <slot />
+    {
+      sources.length > 0 && (
+        <section class="sources">
+          <h2>出典・参考</h2>
+          <ul>
+            {sources.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener noreferrer">
+                  {s.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+  h1 {
+    margin: 0.5rem 0 0.3rem;
+    font-size: 1.7rem;
+  }
+  .lead {
+    color: var(--text-dim);
+    margin-top: 0;
+  }
+  .sources {
+    margin-top: 3rem;
+    font-size: 0.9rem;
+  }
+</style>

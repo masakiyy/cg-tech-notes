@@ -1,0 +1,68 @@
+---
+// 機能・テクニックの適用前後を並べて見せる比較コンポーネント
+// 使い方（MDX内）:
+//   <BeforeAfter>
+//     <Fragment slot="before">画像や説明</Fragment>
+//     <Fragment slot="after">画像や説明</Fragment>
+//   </BeforeAfter>
+interface Props {
+  beforeLabel?: string;
+  afterLabel?: string;
+}
+
+const { beforeLabel = '適用前', afterLabel = '適用後' } = Astro.props;
+---
+
+<figure class="before-after">
+  <div class="pane">
+    <p class="label before">{beforeLabel}</p>
+    <div class="body"><slot name="before" /></div>
+  </div>
+  <div class="pane">
+    <p class="label after">{afterLabel}</p>
+    <div class="body"><slot name="after" /></div>
+  </div>
+</figure>
+
+<style>
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 600px) {
+    .before-after {
+      grid-template-columns: 1fr;
+    }
+  }
+  .pane {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+    overflow: hidden;
+  }
+  .label {
+    margin: 0;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .label.before {
+    color: var(--text-dim);
+  }
+  .label.after {
+    color: var(--accent);
+  }
+  .body {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+  .body :global(img) {
+    border-radius: 4px;
+  }
+  .body :global(p) {
+    margin: 0.3rem 0;
+  }
+</style>

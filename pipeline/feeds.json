@@ -1,0 +1,46 @@
+{
+  "blender": [
+    {
+      "name": "Blender Developers Blog",
+      "url": "https://code.blender.org/feed/"
+    },
+    {
+      "name": "BlenderNation",
+      "url": "https://www.blendernation.com/feed/"
+    },
+    {
+      "name": "Blender Releases (GitHub)",
+      "url": "https://github.com/blender/blender/releases.atom"
+    },
+    {
+      "name": "r/blender 週間トップ",
+      "url": "https://www.reddit.com/r/blender/top/.rss?t=week"
+    }
+  ],
+  "houdini": [
+    {
+      "name": "r/Houdini 週間トップ",
+      "url": "https://www.reddit.com/r/Houdini/top/.rss?t=week"
+    },
+    {
+      "name": "Entagma (Houdiniチュートリアル)",
+      "url": "https://entagma.com/feed/"
+    }
+  ],
+  "unreal": [
+    {
+      "name": "r/unrealengine 週間トップ",
+      "url": "https://www.reddit.com/r/unrealengine/top/.rss?t=week"
+    },
+    {
+      "name": "Unreal Engine Forum 新着",
+      "url": "https://forums.unrealengine.com/latest.rss"
+    }
+  ],
+  "common": [
+    {
+      "name": "80 Level",
+      "url": "https://80.lv/feed"
+    }
+  ]
+}

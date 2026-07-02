@@ -1,0 +1,20 @@
+{
+  "sandbox": {
+    "network": {
+      "allowedHosts": [
+        "code.blender.org",
+        "www.blendernation.com",
+        "www.reddit.com",
+        "reddit.com",
+        "entagma.com",
+        "forums.unrealengine.com",
+        "www.unrealengine.com",
+        "80.lv",
+        "www.sidefx.com",
+        "github.com",
+        "*.githubusercontent.com",
+        "*.npmjs.org"
+      ]
+    }
+  }
+}

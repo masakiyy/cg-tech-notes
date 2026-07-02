@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SOFTWARE, CATEGORIES, url, formatDate } from '../consts';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+---
+
+<li class="card">
+  <div class="meta">
+    <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+    <span class="badge">{CATEGORIES[post.data.category]}</span>
+    {post.data.software.map((s) => <span class={`chip ${s}`}>{SOFTWARE[s]}</span>)}
+  </div>
+  <a class="title" href={url(`/posts/${post.id}/`)}>{post.data.title}</a>
+  <p class="desc">{post.data.description}</p>
+</li>
+
+<style>
+  .card {
+    list-style: none;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+  .title {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .title:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .desc {
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+</style>

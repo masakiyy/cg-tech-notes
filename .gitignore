@@ -1,0 +1,13 @@
+# ビルド成果物
+dist/
+.astro/
+
+# 依存
+node_modules/
+
+# 収集データ・未承認の下書きは公開リポジトリに含めない
+data/
+drafts/
+
+# OS
+.DS_Store

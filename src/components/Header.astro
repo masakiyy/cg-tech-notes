@@ -1,0 +1,51 @@
+---
+import { SITE_TITLE, SOFTWARE, url } from '../consts';
+---
+
+<header>
+  <div class="inner">
+    <a class="site-title" href={url('/')}>{SITE_TITLE}</a>
+    <nav>
+      {
+        Object.entries(SOFTWARE).map(([key, label]) => (
+          <a href={url(`/software/${key}/`)}>{label}</a>
+        ))
+      }
+      <a href={url('/rss.xml')}>RSS</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-panel);
+  }
+  .inner {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0.8rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .site-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  nav a {
+    color: var(--text-dim);
+  }
+  nav a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+</style>

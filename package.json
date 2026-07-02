@@ -1,0 +1,20 @@
+{
+  "name": "cg-tech-notes",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "collect": "NODE_USE_ENV_PROXY=1 node pipeline/collect.mjs",
+    "publish:post": "node pipeline/publish.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "astro": "^5.0.0",
+    "rss-parser": "^3.13.0"
+  }
+}

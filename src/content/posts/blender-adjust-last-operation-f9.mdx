@@ -1,0 +1,55 @@
+---
+title: 'Blender: やり直し不要。実行済みの操作はF9で「後から」調整できる'
+description: 'オブジェクトを追加してから頂点数を変えたくなったとき、Ctrl+Zで戻ってやり直していませんか。公式機能「Adjust Last Operation」を使えば、直前の操作のパラメータだけを後から変更できます。'
+pubDate: 2026-07-02
+software: [blender]
+category: official-hidden
+sources:
+  - title: 'Blender公式マニュアル: Undo & Redo — Adjust Last Operation'
+    url: 'https://docs.blender.org/manual/en/latest/interface/undo_redo.html'
+---
+
+import BeforeAfter from '../../components/BeforeAfter.astro';
+
+## どんな機能か
+
+Blenderのほぼすべての操作（オペレーター）は、実行した**直後**であればパラメータを変更して再実行できます。これが「Adjust Last Operation（直前の操作を調整）」です。
+
+入り口は2つあります。
+
+- 操作直後にエディタ左下へ折りたたまれて表示されるパネルを開く
+- **F9** を押してカーソル位置にポップアップを出す（同じ内容）
+
+メニューからは `Edit ‣ Adjust Last Operation…` でも開けます。
+
+## 典型的な使いどころ
+
+<BeforeAfter beforeLabel="知らない場合" afterLabel="F9を使う場合">
+  <Fragment slot="before">
+    UV球を追加した後に「セグメント数を64にしたかった」と気づく。
+    Ctrl+Zで削除に戻し、追加ダイアログを探してやり直す。
+    回転角度を打ち間違えたときも、undoしてもう一度回転からやり直し。
+  </Fragment>
+  <Fragment slot="after">
+    追加した直後にF9 → Segments欄を64に書き換えるだけ。
+    回転も F9 → Angle欄に正確な数値を入力すれば、
+    操作自体が新しいパラメータで再実行される。
+  </Fragment>
+</BeforeAfter>
+
+ほかにも次のような場面で効きます。
+
+- **プリミティブ追加**: セグメント数・半径・整列（View/World/3D Cursor）を後から変更
+- **トランスフォーム**: 移動量・回転角・スケール値を正確な数値で入れ直す
+- **Loop Cut**: カット数を後からスライダーで増減
+- **Shade Smooth by Angle** など: しきい値角度の調整
+
+## 注意点（ここでハマる）
+
+このパネルが有効なのは**次の操作をするまで**です。ビューポートの回転程度なら平気ですが、別のオペレーターを実行した瞬間に調整の機会は失われ、あとはundoでさかのぼるしかなくなります。「追加 → まず調整 → それから次の作業」の癖をつけるのがコツです。
+
+また、対応しているのはオペレーターとして実装された操作だけで、プロパティエディタでの値変更などには出ません。
+
+## なぜ「隠れ機能」なのか
+
+左下のパネルはデフォルトで折りたたまれており、初見では気づきにくい場所にあります。入門チュートリアルでも「間違えたらCtrl+Z」とだけ教わることが多く、中級者でも知らないまま使い続けているケースをよく見かけます。公式マニュアルにはUndo & Redoのページにきちんと記載されている、正真正銘の公式機能です。

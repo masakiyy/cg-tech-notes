@@ -1,0 +1,55 @@
+---
+title: 'UE5: ISMCの大量インスタンス削除は SetRemoveSwap() で桁違いに速くなる'
+description: '弾丸やデブリのような大量・短寿命のインスタンスを扱うとき、削除処理がフレームを食い潰す問題は SetRemoveSwap() の1行でほぼ消える。実測で削除コストが約6200分の1になった例を紹介。'
+pubDate: 2026-07-02
+software: [unreal]
+category: community-tip
+sources:
+  - title: 'NukeTheBees: UE5 Speeding up ISMC instance removal by 6200× with SetRemoveSwap()'
+    url: 'https://nukethebees.com/unreal-ismc-remove-at-swap-flag/'
+  - title: 'r/unrealengine での投稿'
+    url: 'https://www.reddit.com/r/unrealengine/comments/1uj76py/speeding_up_ismc_instance_removal_by_6200_with/'
+---
+
+import BeforeAfter from '../../components/BeforeAfter.astro';
+
+## 何が問題なのか
+
+Instanced Static Mesh Component（ISMC）は、同じメッシュを大量に描画してもドローコールが増えない便利な仕組みです。ところが**インスタンスの削除**には落とし穴があります。デフォルトでは削除後もインスタンスの並び順を維持するため、抜けた穴を埋めるように残りのインスタンス全体をずらす処理が走ります。つまり削除コストはインスタンス数に比例（O(N)）します。
+
+数十個なら気になりませんが、弾丸・破片・パーティクル的な用途で数千〜数万個を高頻度に出し入れすると、この「ずらし処理」だけでフレームが止まります。
+
+## 解決策: SetRemoveSwap()
+
+ISMCには `SetRemoveSwap()` という設定が用意されています。これを呼ぶと、削除時に「穴を埋めるために全体をずらす」代わりに、**削除対象と末尾のインスタンスを入れ替えてから末尾を切り落とす**方式になります。C++の `TArray::RemoveAtSwap()` と同じ発想です。
+
+```cpp
+// 順序維持が不要なISMCには生成時に一度呼ぶだけ
+InstancedMeshComponent->SetRemoveSwap();
+```
+
+## どれくらい速くなるのか
+
+元記事の筆者（NukeTheBees氏）が自作ゲームで、ピーク時2万発超のISMC弾丸を対象に20秒間のベンチマークを取っています（AMD 5800X3D / RTX 5070。この設定の有無だけを変えた比較）。
+
+<BeforeAfter beforeLabel="SetRemoveSwap なし" afterLabel="SetRemoveSwap あり">
+  <Fragment slot="before">
+    最悪フレーム **493.68 ms（2.0 FPS）**。フレーム内の83.5%（412.72 ms）が
+    インスタンス削除に費やされ、実質プレイ不能。
+  </Fragment>
+  <Fragment slot="after">
+    最悪フレーム **31.43 ms（31.8 FPS）**。削除処理はわずか **66 μs**（フレームの0.21%）。
+    削除コスト単体では約 **6200倍** の高速化。
+  </Fragment>
+</BeforeAfter>
+
+## トレードオフと使いどころ
+
+代償はひとつだけで、**インスタンスの並び順が保証されなくなる**ことです。
+
+- インスタンスに対応するデータを並行配列（インデックス対応）で持っている場合は、そちらも `RemoveAtSwap()` で同期させる必要があります
+- 並び順に意味があるロジック（インデックスでの参照など）がある場合は使えません
+
+逆に言えば、弾丸・デブリ・草の刈り取りのような「順序がどうでもいい大量インスタンス」には入れない理由がほぼありません。公式のISMCチュートリアルではほとんど触れられていない設定なので、高頻度に削除が走るISMCを持っているプロジェクトは一度プロファイルを取って確認する価値があります。
+
+なお、当サイトでの再現ベンチマークは未実施です（数値はすべて元記事の実測値）。
